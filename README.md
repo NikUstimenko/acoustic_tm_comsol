@@ -5,20 +5,23 @@ embedding medium must be reciprocal. If the geometry allows it, for example
 rotationally symmetric objects, computations in a reduced number of dimensions are
 possible.
 
+## Publication
+
+When using these models please cite:
+
 ## Warning
 
 Comsol uses the time evolution $`\exp(i \omega t)`$. This means that all values,
 especially the material property parameters, must be complex conjugated with respect to
 the opposite convention $`\exp(-i \omega t)`$ that is often used in physics.
 
-This has been accounted for in the readmph_tmatrix script using complex conjugate.
+This difference has been taken into account in `readmph_tmatrix.py` using complex conjugation.
 
 ## Comsol Version Requirement
 
-Speaking of compatibility, there is a major difference between Comsol 5.4 and Comsol 5.5
-regarding this code: the associated Legendre polynomials are not implemented in the
-former one and should be defined manually. For Comsol 5.5 and above no such
-restrictions apply.
+There is a major difference between Comsol 5.4 and Comsol 5.5 regarding these models: 
+the associated Legendre polynomials are not implemented in the former one and should be defined manually. 
+For Comsol 5.5 and above no such restrictions apply.
 
 ## General Usage
 
@@ -51,7 +54,7 @@ variables `ap` and `am`.
 The acoustic T-Matrix of a 3D finite object uses scalar spherical wave (SSW) functions as a basis set. For
 non-reciprocal media, the eigensolutions get much more complicated, so they cannot be
 included in a simple way (for the embedding medium). The same is true for anisotropy, so
-the embedding medium must be homogeneous, isotropic and reciprocal. An additional
+the embedding medium must be fluid (no shear waves), homogeneous, isotropic and reciprocal. An additional
 constraint is, that the object must have a finite size.
 
 There are two types of geometries for the T-matrix calculation, `3D` and
@@ -62,94 +65,51 @@ respect to `m` is enforced.
 
 ## Math
 
-We start by defining the vector spherical harmonics
+We begin with defining the spherical harmonics of a degree $`l`$ and an order $`m`$
 
 ```math
 Y_{lm}(\theta, \varphi)
-= \frac{1}{\sqrt{l(l+1)}} \boldsymbol L Y_{lm}(\theta, \varphi) \\
-= \underbrace{\mathrm i \sqrt{\frac{(2l+1)}{4\pi l (l+1)} \frac{(l-m)!}{(l+m)!}}}_{\gamma_{lm}}
-\mathrm e^{\mathrm i m \varphi}
-\bigg( \boldsymbol{\hat{\theta}}
-\underbrace{\frac{\mathrm i m}{\sin\theta} P_l^m(\cos\theta)}_{\mathrm i \pi_{lm}(\theta)}
-- \boldsymbol{\hat{\varphi}}
-\underbrace{\frac{\partial}{\partial\theta} P_l^m(\cos\theta)}_{\tau_{lm}(\theta)}
-\bigg)
+= \sqrt{\frac{2l + 1}{4 \pi} \frac{(l - m)!}{(l + m)!}}P_{l}^m(\cos \theta)\mathrm{e}^{\mathrm{i} m \varphi}\,,
 ```
 
-and get the vector spherical wave functions with
+which produce the scalar spherical waves as
 
 ```math
-\boldsymbol M_{lm}^{(n)}(kr, \theta, \varphi)
-= \boldsymbol X_{lm}(\theta, \varphi) z_l^{(n)}(kr) \\
-\boldsymbol N_{lm}^{(n)}(kr, \theta, \varphi)
-= \frac{\nabla}{k} \times \boldsymbol M_{lm}^{(n)}{lm}(kr, \theta, \varphi) \\
-\boldsymbol A_{lmp}^{(n)}(k_pr, \theta, \varphi)
-= \frac{1}{\sqrt{2}}
-\left(
-\boldsymbol N_{lm}^{(n)}(k_pr, \theta, \varphi)
-+ p \boldsymbol M_{lm}^{(n)}(k_pr, \theta, \varphi)
-\right)\,.
+\Psi^{(n)}_{lm}(kr, \theta, \varphi) = z^{(n)}_l(k r) Y_{lm}(\theta, \varphi)\,.
 ```
+where $`k = \omega/c`$ is the wavenumber of acoustic waves in the embedding.
+The incident wave uses spherical Bessel functions of the first kind ($`n = 1`$). 
+The scattered wave is expressed with spherical Hankel functions of the first kind ($`n = 3`$).
 
-The latter are modes of well-defined helicity, where we introduced the wave numbers
-$`k_\pm = k_0 (\sqrt{\epsilon_r \mu_r} \pm \kappa)\,`$. The incident wave uses spherical
-Bessel functions of the first kind ($`n = 1`$). The scattered wave is expressed with
-spherical Hankel functions of the first kind ($`n = 1`$).
-
-We can decompose the scattered field as
+We can decompose the scattered pressure field as
 
 ```math
-\boldsymbol E_{\text{sca}}(\boldsymbol r)
-= \sum_{l,m,p} a_{lmp} \boldsymbol A_{lmp}^{(3)}(k_pr, \theta, \varphi)\,.
+p_{\text{sca}}(kr, \theta, \varphi)
+= \sum_{l,m} a_{lm} \Psi_{lm}^{(3)}(kr, \theta, \varphi)\,.
 ```
 
-We can project onto the different modes by using
+By using the following equation:
 
 ```math
-\int \mathrm d\Omega
-\boldsymbol X_{lm}^\ast(\theta, \varphi)
-\boldsymbol M_{lm}^{(n)}(kr, \theta, \varphi)
-= z_l^{(n)}(kr) \\
-\int \mathrm d\Omega
-\boldsymbol r \times \boldsymbol X_{lm}^\ast(\theta, \varphi)
-\boldsymbol N_{lm}^{(n)}(kr, \theta, \varphi)
-= \frac{z_l^{(n)}(kr)}{kr} + \frac{\partial }{\partial(kr)} z_l^{(n)}(kr) \\
-\int \mathrm d\Omega
-\boldsymbol X_{lm}^\ast(\theta, \varphi)
-\boldsymbol N_{lm}^{(n)}(kr, \theta, \varphi)
-= 0 \\
-\int \mathrm d\Omega
-\boldsymbol r \times \boldsymbol X_{lm}^\ast(\theta, \varphi)
-\boldsymbol M_{lm}^{(n)}(kr, \theta, \varphi)
-= 0
+\int \mathrm d\Omega Y_{lm}^\ast(\theta, \varphi)
+\Psi_{lm}^{(n)}(kr, \theta, \varphi)
+= z^{(n)}_l(k r)\,,
 ```
 
-such that the coefficients $`a_{lm+}`$ and $`a_{lm-}`$ can be computed by solving
+the coefficients $`a_{lm}`$ can be obtained by projecting the scattered field
+onto different modes
 
 ```math
-\frac{1}{\sqrt{2}}
-\begin{pmatrix}
-h_l^{(1)}(k_+ r) & -h_l^{(1)}(k_- r) \\
-\psi_l^{(1)}(k_+ r) & \psi_l^{(1)}(k_- r) \\
-\end{pmatrix}
-\begin{pmatrix}
-a_{lm,+} \\
-a_{lm,-}
-\end{pmatrix}
-=
-\begin{pmatrix}
-\int \mathrm d\Omega \boldsymbol X_{lm}^\ast(\theta, \varphi) \boldsymbol E_{\text{sca}}(\boldsymbol r) \\
-\int \mathrm d\Omega \boldsymbol r \times \boldsymbol X_{lm}^\ast(\theta, \varphi) \boldsymbol E_{\text{sca}}(\boldsymbol r)
-\end{pmatrix}
+a_{lm} = \frac{1}{h^{(1)}_l(k r_d)}\int \mathrm d\Omega Y_{lm}^\ast(\theta, \varphi)
+p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
-where $`\psi_l^{(n)}(x) = \frac{h_l^{(n)}(x)}{x} + \frac{\partial}{\partial x} h_l^{(n)}(x)\,`$.
+where the integration is carried out over the spherical surface of a radius $`r_d`$.
 
 # Cylindrical T-Matrix
 
-Two-dimensional (or cylindrical) T-matrices use vector cylindrical wave (VCW) functions
-as a basis set. All remarks regarding bi-anisotropy for the T-matrix also apply here.
-The difference is, that the VCWs allow the objects to be infinitely extended in the
-z-direction, either being uniform or periodic along this axis.
+Two-dimensional (or cylindrical) acoustic T-matrices use scalar cylindrical wave (SCW) functions
+as a basis set. The difference to the previous case is that the SCWs allow the objects to be infinitely 
+extended in the z-direction, either being uniform or periodic along this axis.
 
 There are three java files for the calculation, `tmatrixc.java`, `tmatrixc_axisym.java`,
 and `tmatrixc_uni.java`. The first two of them are for periodic objects. Equivalently to
