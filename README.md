@@ -38,6 +38,12 @@ the decomposition of the scattered fields.
 As computation object, all of the examples use either a sphere or an infinitely extended
 cylinder defined by `r_obj`. Change the geometry or the parameters to your liking.
 
+There are two types of the models based on the incident field formulation.
+
+### Background field
+
+### Fast sweep models
+
 In the first study the actual solutions of the scattering problems are calculated. A
 frequency sweep is assumed per default. Adjust it to your needs. You can define
 additionally other parametric sweeps. Run the first study manually, if needed.
