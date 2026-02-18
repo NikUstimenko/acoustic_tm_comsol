@@ -111,7 +111,7 @@ p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
 where the integration is carried out over the spherical surface of a radius $`r_d`$.
 
-# Cylindrical T-Matrix
+# Acoustic cylindrical T-Matrix
 
 Two-dimensional (or cylindrical) acoustic T-matrices use scalar cylindrical wave (SCW) functions
 as a basis set. The difference to the previous case is that the SCWs allow the objects to be infinitely 
