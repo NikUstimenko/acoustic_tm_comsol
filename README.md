@@ -11,17 +11,18 @@ When using these models please cite:
 
 ## Warning
 
-Comsol uses the time evolution $`\exp(i \omega t)`$. This means that all values,
+COMSOL uses the time evolution $`\exp(i \omega t)`$. This means that all values,
 especially the material property parameters, must be complex conjugated with respect to
 the opposite convention $`\exp(-i \omega t)`$ that is often used in physics.
 
-This difference has been taken into account in `readmph_tmatrix.py` using complex conjugation.
+Please note that this difference has been taken into account, so that the models
+calculate the T-matrix entries with the physics convention.
 
 ## Comsol Version Requirement
 
-There is a major difference between Comsol 5.4 and Comsol 5.5 regarding these models: 
-the associated Legendre polynomials are not implemented in the former one and should be defined manually. 
-For Comsol 5.5 and above no such restrictions apply.
+These models are implemented in COMSOL 6.2. They can be analogously impemented 
+in all versions starting from 5.5. However, in version 5.4 and older one has to
+define the associated Legendre polynomials manually. 
 
 ## General Usage
 
@@ -42,18 +43,26 @@ There are two types of the models based on the incident field formulation.
 
 ### Background field
 
+This is the general formulation that apply to any boundary conditions at scatterer-embedding
+interface. It requires you only to run Study 1, which you can adjust to your needs. Namely,
+you can define a frequency range and other parametric sweeps. The study will sweep over 
+all possible incident fields for a given `lmax` or `mmax`, being a single multipolar wave, 
+and solve the scattering problem. Then you can get the results via *Global Evaluation* 
+in the *Results* section, returning the variables `ap`, which are the desired T-matrix entries. 
+
 ### Fast sweep models
 
-In the first study the actual solutions of the scattering problems are calculated. A
-frequency sweep is assumed per default. Adjust it to your needs. You can define
-additionally other parametric sweeps. Run the first study manually, if needed.
+If the scatterer is homogeneous and fluid (no shear waves), it becomes possible to speed up
+the calculations by defining the monopole and dipole sources instead of the background field.
+In this case, one needs to run two studies.
 
+The first study is the same as for the background field formulation. 
 The second study is only used as an auxiliary for the post-processing. It does not solve
 anything, but evaluates the necessary integrals and computes the T-matrix entries. Make
 sure to mirror the frequency sweep of the first study and also all parameter sweeps, you
 added to the first study. Run this second study. Then you can get the results via
 *Global Evaluation* of the second study in the *Results* section, returning the
-variables `ap` and `am`.
+variables `ap`.
 
 # Acoustic T-Matrix
 
@@ -103,13 +112,20 @@ By using the following equation:
 ```
 
 the coefficients $`a_{lm}`$ can be obtained by projecting the scattered field
-onto different modes
+onto different modes [Tsimokha et al. PRB 105, 165311 (2022)](https://doi.org/10.1103/PhysRevB.105.165311)
 
 ```math
-a_{lm} = \frac{1}{h^{(1)}_l(k r_d)}\int \mathrm d\Omega Y_{lm}^\ast(\theta, \varphi)
+a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm dS Y_{lm}^\ast(\theta, \varphi)
 p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
 where the integration is carried out over the spherical surface of a radius $`r_d`$.
+
+In the case of an axisymmetric problem, the integral above can be simplified 
+to a contour one [Ustimenko et al., APL 126, 142201 (2025)](https://doi.org/10.1063/5.0257760)
+```math
+a_{lm} = \frac{2 \pi}{r_d h^{(1)}_l(k r_d)}\int \mathrm dl \sin \theta Y_{lm}^\ast(\theta, 0)
+p_{\text{sca}}(kr_d, \theta, 0))\,.
+```
 
 # Acoustic cylindrical T-Matrix
 
