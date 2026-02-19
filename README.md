@@ -112,16 +112,16 @@ By using the following equation:
 ```
 
 the coefficients $`a_{lm}`$ can be obtained by projecting the scattered field
-onto different modes [Tsimokha et al. PRB 105, 165311 (2022)](https://doi.org/10.1103/PhysRevB.105.165311)
+onto different modes [[Tsimokha et al. PRB 105, 165311 (2022)](https://doi.org/10.1103/PhysRevB.105.165311)]
 
 ```math
-a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm dS Y_{lm}^\ast(\theta, \varphi)
+a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm{d}S Y_{lm}^\ast(\theta, \varphi)
 p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
 where the integration is carried out over the spherical surface of a radius $`r_d`$.
 
 In the case of an axisymmetric problem, the integral above can be simplified 
-to a contour one [Ustimenko et al., APL 126, 142201 (2025)](https://doi.org/10.1063/5.0257760)
+to a contour one [[Ustimenko et al., APL 126, 142201 (2025)](https://doi.org/10.1063/5.0257760)]
 ```math
 a_{lm} = \frac{2 \pi}{r_d h^{(1)}_l(k r_d)}\int \mathrm dl \sin \theta Y_{lm}^\ast(\theta, 0)
 p_{\text{sca}}(kr_d, \theta, 0))\,.
