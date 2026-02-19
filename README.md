@@ -115,7 +115,7 @@ the coefficients $`a_{lm}`$ can be obtained by projecting the scattered field
 onto different modes [[Tsimokha et al. PRB 105, 165311 (2022)](https://doi.org/10.1103/PhysRevB.105.165311)]
 
 ```math
-a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm{d}S Y_{lm}^\ast(\theta, \varphi)
+a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm{d} S Y_{lm}^\ast(\theta, \varphi)
 p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
 where the integration is carried out over the spherical surface of a radius $`r_d`$.
@@ -123,8 +123,8 @@ where the integration is carried out over the spherical surface of a radius $`r_
 In the case of an axisymmetric problem, the integral above can be simplified 
 to a contour one [[Ustimenko et al., APL 126, 142201 (2025)](https://doi.org/10.1063/5.0257760)]
 ```math
-a_{lm} = \frac{2 \pi}{r_d h^{(1)}_l(k r_d)}\int \mathrm dl \sin \theta Y_{lm}^\ast(\theta, 0)
-p_{\text{sca}}(kr_d, \theta, 0))\,.
+a_{lm} = \frac{2 \pi}{r_d h^{(1)}_l(k r_d)}\int \mathrm d l \sin \theta Y_{lm}^\ast(\theta, 0)
+p_{\text{sca}}(kr_d, \theta, 0)\,.
 ```
 
 # Acoustic cylindrical T-Matrix
@@ -133,78 +133,18 @@ Two-dimensional (or cylindrical) acoustic T-matrices use scalar cylindrical wave
 as a basis set. The difference to the previous case is that the SCWs allow the objects to be infinitely 
 extended in the z-direction, either being uniform or periodic along this axis.
 
-There are three java files for the calculation, `tmatrixc.java`, `tmatrixc_axisym.java`,
-and `tmatrixc_uni.java`. The first two of them are for periodic objects. Equivalently to
-the T-matrix case, the object can either have a general shape or be axisymmetric. The
-last file is for infinitely extended uniform objects. This has, like the axisymmetric
+Equivalently to the T-matrix case, the object can either have a general shape or be axisymmetric. The
+file is for infinitely extended uniform objects. This has, like the axisymmetric
 case, only a two-dimensional computation domain. Again, axisymmetry enforces diagonality
 with respect to `m`.
-
-In the periodic cases only `kz` values that differ by a multiple of the reciprocal
-lattice vector are considered in the model, the number of reciprocal lattice vectors
-included in each direction is `n_kz`. For uniform cases, different `kz` values do not
-couple.
 
 ## Math
 
 The cylindrical vector waves are defined as
 
 ```math
-\boldsymbol M_{mk_z}^{(n)}(\rho, \varphi, z)
-= \mathrm e^{\mathrm i m \varphi + \mathrm i k_z z}
-\left[
-\mathrm i m \frac{Z_m^{(n)}(k_\rho \rho)}{k_\rho \rho} \boldsymbol{\hat\rho}
-- Z_m^{(n)\prime}(k_\rho \rho) \boldsymbol{\hat\varphi}
-\right] \\
-\boldsymbol N_{mk_z}^{(n)}(\rho, \varphi, z)
-= \frac{\nabla}{k} \times \boldsymbol M_{mk_z}^{(n)}(\rho, \varphi, z ) \\
-\boldsymbol A_{m k_z p}^{(n)}(\rho, \varphi, z)
-= \frac{1}{\sqrt{2}} \left(\boldsymbol N_{mk_z}^{(n)}(\rho, \varphi, z )
-+ p \boldsymbol M_{mk_z}^{(n)}(\rho, \varphi, z ) \right)\,.
+\Psi^{(n)}_{k_z,m}(k_{\rho}\rho) = Z^{(n)}_m(k_{\rho}\rho) \mathrm{e}^{\mathrm{i} m \varphi + \mathrm{i} k_z z}\,,
 ```
-
-where $`k_\rho = \sqrt{k^2 - k_z^2}`$ and $`Z_m^{(n)}`$ are the Bessel or Hankel
-functions. The projection onto different modes in the case of chiral media, and
-therefore different $`k`$ and $`k_\rho`$ values, is not as straightforward as in the
-cylindrical case. Similar to the spherical case we expand the scattered wave using
-Hankel functions. We use the integrals
-
-```math
-I_1
-= \frac{1}{2\pi a_z}
-\int_0^{2\pi} \mathrm d \varphi
-\int_0^{a_z} \mathrm d_z
-\mathrm e^{\mathrm i m \varphi + \mathrm i k_z z}
-\boldsymbol{\hat z} \boldsymbol E_{\text{sca}}(\boldsymbol r)
-= \frac{1}{\sqrt 2}
-\left(
-\frac{k_{\rho+} H_m^{(1)}(k_{\rho+} \rho)}{k_{\rho+} \rho} a_{mk_z +}
-+ \frac{k_{\rho-} H_m^{(1)}(k_{\rho-} \rho)}{k_{\rho-} \rho} a_{mk_z -}
-\right) \\
-I_2
-= \frac{1}{2\pi a_z}
-\int_0^{2\pi} \mathrm d \varphi
-\int_0^{a_z} \mathrm d_z
-\mathrm e^{\mathrm i m \varphi + \mathrm i k_z z}
-\left(
--\mathrm i m \frac{H_m^{(1)}(k_{\rho+} \rho)}{k_{\rho+} \rho} \boldsymbol{\hat\rho}
-- H_m^{(1)\prime}(k_{\rho+} \rho) \boldsymbol{\hat\varphi}\right)
-\boldsymbol E_{\text{sca}}(\boldsymbol r) \\
-= \frac{1}{\sqrt 2}
-\left[
-H_{m+1}^{(1)}(k_{\rho+} \rho) H_{m-1}^{(1)}(k_{\rho+} \rho) a_{mk_z +}
-- \frac{H_{m+1}^{(1)}(k_{\rho+} \rho) H_{m-1}^{(1)}(k_{\rho-} \rho)(k_- - k_z)
-+ H_{m+1}^{(1)}(k_{\rho-} \rho) H_{m-1}^{(1)}(k_{\rho+} \rho)(k_- + k_z)}{2k_-}a_{mk_z -}
-\right]
-```
-
-to get a system of linear equations to determine $`a_{mk_z\pm}`$. The choice of these
-integrals is somewhat arbitrary, e.g., for the second integral one could use equally
-well the values for negative polarization. In the case of $`k_z=0`$ these integrals are
-similar to the spherical case integral in the sense, that they separate
-$`\boldsymbol M`$ and $`\boldsymbol N`$ modes.
-
-# Closing remarks
-
-The provided files can also be used as a starting point for any bi-isotropic calculation
-and are not necessarily restricted to the computation of T-matrix coefficients.
+where $`k_\rho = \sqrt{k^2 - k_z^2}`$ and $`Z_m^{(n)}`$ are the Bessel or first-kind Hankel
+functions. Similar to the spherical-wave case, we expand the scattered field using the
+Hankel functions.
