@@ -143,7 +143,7 @@ with respect to `m`.
 The cylindrical vector waves are defined as
 
 ```math
-\Psi^{(n)}_{k_z,m}(k_{\rho}\rho) = Z^{(n)}_m(k_{\rho}\rho) \mathrm{e}^{\mathrm{i} m \varphi + \mathrm{i} k_z z}\,,
+\Psi^{(n)}_{k_z,m}(k_{\rho}\rho,\varphi,k_z z) = Z^{(n)}_m(k_{\rho}\rho) \mathrm{e}^{\mathrm{i} m \varphi + \mathrm{i} k_z z}\,,
 ```
 where $`k_\rho = \sqrt{k^2 - k_z^2}`$ and $`Z_m^{(n)}`$ are the Bessel or first-kind Hankel
 functions. Similar to the spherical-wave case, we expand the scattered field using the
