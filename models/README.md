@@ -67,7 +67,8 @@ and save it. Then run the command
 
 * `python readmph_tmatrix.py modelfile.mph tmatrixfile.hdf5`
 
-Currently, mesh export does not work. For 
+Currently, mesh export does not work. For 2D axisymmetric models, write 
+`readmph_tmatrix_2daxis.py` instead of `readmph_tmatrix.py`.
 
 ## Implementation notes of the `fastsweep` models
 
