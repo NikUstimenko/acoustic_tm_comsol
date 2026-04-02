@@ -75,16 +75,14 @@ To avoid using COMSOL's own scattered-field formulation, which is extremely slow
 with multipole fields, the scattered field formulation is re-implemented using 
 domain sources. In this case, the governing equations include sources
 
-*  `curl E = -dB/dt + Jmag`
-
-*  `curl H = dD/dt + J`
+*  `div( -1/rho (grad p - q_d) ) - k^2 p / rho = Q_m`
 
 Then, substituting `p = p_inc + p_sc` and `v = v_inc + v_sc`, we can derive the 
 expressions for the scattering currents
 
-* `Q = omega^2 (beta_obj - beta_domain) p_inc`
+* `Q_m = omega^2 (beta_obj - beta_domain) p_inc`
 
-* `q = -i omega (rho_obj - rho_domain) v_inc`
+* `q_d = -i omega (rho_obj - rho_domain) v_inc`
 
 The incident fields `p_inc` and `v_inc` are the regular multipole fields.
 
