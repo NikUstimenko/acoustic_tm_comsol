@@ -148,3 +148,9 @@ The cylindrical vector waves are defined as
 where $`k_\rho = \sqrt{k^2 - k_z^2}`$ and $`Z_m^{(n)}`$ are the Bessel or first-kind Hankel
 functions. Similar to the spherical-wave case, we expand the scattered field using the
 Hankel functions.
+
+## Outlook
+
+The provided files can also be used as a starting point for any scattering simulation
+and are not necessarily restricted to the computation of T-matrix coefficients. For example,
+see the file `acoustic-solid_sphere_core-shell_cross-section.mph`.
