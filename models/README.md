@@ -1,6 +1,6 @@
-# Instructions for calculating acoustic T-matrices of scatterers with COMSOL Multiphysics
+# Instructions for computing acoustic T-matrices of scatterers with COMSOL Multiphysics
 
-In calculating T-matrices, one repeatedly illuminates the scatterer with many
+When computing T-matrices, one repeatedly insonificates the scatterer with many
 different sources. Meanwhile, the FEM equation system is typically solved by
 first factoring the system matrix and then solving the resulting linear system.
 The `fastsweep` models implement the calculation in such a way that COMSOL only has to
