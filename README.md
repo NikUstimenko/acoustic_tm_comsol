@@ -7,7 +7,9 @@ possible.
 
 ## Publication
 
-When using these models please cite:
+When using these models, please cite:
+
+[N. Ustimenko, and C. Rockstuhl, acoustotreams -- A Python package for acoustic-wave scattering based on the T-matrix method, arXiv 2606.22573 (2026).](https://arxiv.org/abs/2512.20506)
 
 ## Warning
 
