@@ -1,7 +1,7 @@
-# Acoustic T-Matrix Computation with Comsol
+# Computation of Acoustic T-Matrices in COMSOL Multiphysics
 
 Compute the acoustic T-Matrix of arbitrarily shaped objects. The
-embedding medium must be reciprocal. If the geometry allows it, for example
+embedding medium must be reciprocal. If the geometry allows it, for example,
 rotationally symmetric objects, computations in a reduced number of dimensions are
 possible.
 
@@ -22,15 +22,15 @@ calculate the T-matrix entries with the physics convention.
 
 ## Comsol Version Requirement
 
-These models are implemented in COMSOL 6.2. They can be analogously impemented 
-in all versions starting from 5.5. However, in version 5.4 and older one has to
+These models are implemented in COMSOL 6.2. They can be analogously implemented 
+in all versions starting from 5.5. However, in version 5.4 and older, one has to
 define the associated Legendre polynomials manually. 
 
 ## General Usage
 
 Define your object, your materials (see warning), and the parameters for the
 decomposition. The latter includes the modes that are used in the calculation and
-`r_decomp` the radius of the decomposition. The sphere (or cylinder for cylindrical
+`r_decomp`, the radius of the decomposition. The sphere (or cylinder for cylindrical
 T-matrices) defined by this radius must completely enclose the object of interest.
 Additionally, define the radius of the domain `r_domain >= r_decomp` and the thickness
 of the perfectly matched layers (PML) `d_pml` around the domain. These three parameters
@@ -38,14 +38,14 @@ define the first object in the geometry, which uses the first material for its
 properties. The first object and material are later used for the embedding material in
 the decomposition of the scattered fields.
 
-As computation object, all of the examples use either a sphere or an infinitely extended
-cylinder defined by `r_obj`. Change the geometry or the parameters to your liking.
+As a computational object, all of the examples use either a sphere or an infinitely extended
+cylinder defined by `r_obj`. Change the geometry or parameters as needed.
 
-There are two types of the models based on the incident field formulation.
+Two types of models are available based on the incident field formulation.
 
 ### Background field
 
-This is the general formulation that apply to any boundary conditions at scatterer-embedding
+This is the general formulation that applies to any boundary conditions at the scatterer-embedding
 interface. It requires you only to run Study 1, which you can adjust to your needs. Namely,
 you can define a frequency range and other parametric sweeps. The study will sweep over 
 all possible incident fields for a given `lmax` or `mmax`, being a single multipolar wave, 
@@ -61,7 +61,7 @@ In this case, one needs to run two studies.
 The first study is the same as for the background field formulation. 
 The second study is only used as an auxiliary for the post-processing. It does not solve
 anything, but evaluates the necessary integrals and computes the T-matrix entries. Make
-sure to mirror the frequency sweep of the first study and also all parameter sweeps, you
+sure to mirror the frequency sweep of the first study and also all parameter sweeps you
 added to the first study. Run this second study. Then you can get the results via
 *Global Evaluation* of the second study in the *Results* section, returning the
 variables `ap`.
@@ -72,7 +72,7 @@ The acoustic T-Matrix of a 3D finite object uses scalar spherical wave (SSW) fun
 non-reciprocal media, the eigensolutions get much more complicated, so they cannot be
 included in a simple way (for the embedding medium). The same is true for anisotropy, so
 the embedding medium must be fluid (no shear waves), homogeneous, isotropic and reciprocal. An additional
-constraint is, that the object must have a finite size.
+constraint is that the object must have a finite size.
 
 There are two types of geometries for the T-matrix calculation, `3D` and
 `axisym` for general three-dimensional objects and for axisymmetric
@@ -82,7 +82,7 @@ respect to `m` is enforced.
 
 ## Math
 
-We begin with defining the spherical harmonics of a degree $`l`$ and an order $`m`$
+We begin by defining the spherical harmonics of degree $`l`$ and order $`m`$
 
 ```math
 Y_{lm}(\theta, \varphi)
@@ -105,7 +105,7 @@ p_{\text{sca}}(kr, \theta, \varphi)
 = \sum_{l,m} a_{lm} \Psi_{lm}^{(3)}(kr, \theta, \varphi)\,.
 ```
 
-By using the following equation:
+Using the following equation:
 
 ```math
 \int \mathrm d\Omega Y_{lm}^\ast(\theta, \varphi)
@@ -120,7 +120,7 @@ onto different modes [[Tsimokha et al. PRB 105, 165311 (2022)](https://doi.org/1
 a_{lm} = \frac{1}{r_d^2 h^{(1)}_l(k r_d)}\int \mathrm{d} S Y_{lm}^\ast(\theta, \varphi)
 p_{\text{sca}}(kr_d, \theta, \varphi))\,,
 ```
-where the integration is carried out over the spherical surface of a radius $`r_d`$.
+where the integration is carried out over the spherical surface of radius $`r_d`$.
 
 In the case of an axisymmetric problem, the integral above can be simplified 
 to a contour one [[Ustimenko et al., APL 126, 142201 (2025)](https://doi.org/10.1063/5.0257760)]
